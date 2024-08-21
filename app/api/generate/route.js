@@ -15,7 +15,7 @@ You should return in the following JSON format:
 }
 `
 export async function POST(req) {
-    const openai = new OpenAI()
+    const openai = new OpenAI( {apiKey: process.env.OPENAI_API_KEY })
     const data = await req.text()
   
     const completion = await openai.chat.completions.create({
@@ -23,11 +23,11 @@ export async function POST(req) {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: data },
       ],
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       response_format: { type: 'json_object' },
     })
   
     const flashcards = JSON.parse(completion.choices[0].message.content)
-  
+    
     return NextResponse.json(flashcards.flashcards)
   }
